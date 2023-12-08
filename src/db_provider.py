@@ -13,20 +13,24 @@ class DbProvider():
             'books': []
         }
 
+    def __create_n_seed(data):
+        db_path = DbProvider.__db_path
+        os.makedirs(os.path.dirname(db_path), exist_ok=True)
+
+        db_file = open(db_path, 'w')
+        data_str = json.dumps(DbProvider.__get_default_dbobj(),
+                              indent=DbProvider.__json_indent)
+
+        db_file.write(data_str)
+        db_file.close()
+
     def get_db_json():
         db_path = DbProvider.__db_path
 
         try:
             db_file = open(db_path, 'r')
         except FileNotFoundError:
-            os.makedirs(os.path.dirname(db_path), exist_ok=True)
-
-            db_file = open(db_path, 'w')
-            data_str = json.dumps(DbProvider.__get_default_dbobj(),
-                                  indent=DbProvider.__json_indent)
-
-            db_file.write(data_str)
-            db_file.close()
+            DbProvider.__create_n_seed(DbProvider.__get_default_dbobj())
             db_file = open(db_path, 'r')
 
         json_data = json.load(db_file)
