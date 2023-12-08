@@ -36,19 +36,17 @@ class BaseController(ABC):
         collection = self.db_provider.get_db_json()[self.target_collection]
         return FulfilledReq(collection)
 
+    @tryexceptwrap
     def add_item(self, item) -> ControllerMethodOutput:
-        try:
-            db_json = self.db_provider.get_db_json()
-            db_json[self.target_collection].apppend(item)
-            self.db_provider.rewrite_db(db_json)
+        db_json = self.db_provider.get_db_json()
+        db_json[self.target_collection].apppend(item)
+        self.db_provider.rewrite_db(db_json)
 
-            return FulfilledReq()
-        except Exception as e:
-            return FailedReq(repr(e))
-
+    @tryexceptwrap
     def delete_item(self, id) -> ControllerMethodOutput:
         pass
 
+    @tryexceptwrap
     def edit_item(self, id, new_entry) -> ControllerMethodOutput:
         pass
 
