@@ -2,6 +2,7 @@ from abc import abstractmethod, ABC
 from typing import Union
 
 from db_provider import DbProvider
+from models.models import BaseItem
 
 type ControllerMethodOutput = Union[FulfilledReq, FailedReq]
 
@@ -41,14 +42,23 @@ class BaseController(ABC):
         db_json = self.db_provider.get_db_json()
         db_json[self.target_collection].add(item)
         self.db_provider.rewrite_db(db_json)
+        return FulfilledReq()
 
     @tryexceptwrap
     def delete_item(self, id) -> ControllerMethodOutput:
-        pass
+        db_json = self.db_provider.get_db_json()
+        del db_json[self.target_collection][id]
+        return FulfilledReq()
 
     @tryexceptwrap
-    def edit_item(self, id, new_entry) -> ControllerMethodOutput:
-        pass
+    def edit_item(self, new_item: BaseItem) -> ControllerMethodOutput:
+        id = new_item.id
+        db_json = self.db_provider.get_db_json()
+        if db_json[self.target_collection].get(id) is None:
+            return FailedReq('Not existing id of the item')
+
+        db_json[self.target_collection][id] = new_item
+        return FulfilledReq()
 
 
 class GamesController(BaseController):
