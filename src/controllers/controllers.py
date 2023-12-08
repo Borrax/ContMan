@@ -39,7 +39,7 @@ class BaseController(ABC):
     @tryexceptwrap
     def add_item(self, item) -> ControllerMethodOutput:
         db_json = self.db_provider.get_db_json()
-        db_json[self.target_collection].apppend(item)
+        db_json[self.target_collection].add(item)
         self.db_provider.rewrite_db(db_json)
 
     @tryexceptwrap
