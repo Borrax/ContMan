@@ -8,9 +8,9 @@ class DbProvider():
 
     def __get_default_dbobj():
         return {
-            'games': [],
-            'movies': [],
-            'books': []
+            'games': {},
+            'movies': {},
+            'books': {}
         }
 
     def __create_n_seed(data):
