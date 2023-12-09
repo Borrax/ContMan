@@ -64,4 +64,11 @@ class GamesController(BaseController):
         super().__init__(db_provider, 'games')
 
 
-GamesController(DbProvider)
+class BooksController(BaseController):
+    def __init__(self, db_provider):
+        super().__init__(db_provider, 'books')
+
+
+class MoviesController(BaseController):
+    def __init__(self, db_provider):
+        super().__init__(db_provider, 'movies')
