@@ -12,6 +12,7 @@ def tryexceptwrap_builder(
             try:
                 return success_func(*args, **kwargs)
             except Exception as e:
+                print(e)
                 return error_func(e)
         return caller
 

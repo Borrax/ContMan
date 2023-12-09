@@ -27,8 +27,8 @@ class BaseController(ABC):
 
     @abstractmethod
     def __init__(self, db_provider: DbProvider, target_collection: str):
-        self.db_provider = db_provider
-        self.target_collection = target_collection
+        self.__db_provider = db_provider
+        self.__target_collection = target_collection
 
     @__tryexceptwrap
     def get_collection(self) -> ControllerMethodOutput:
