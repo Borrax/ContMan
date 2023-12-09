@@ -1,6 +1,50 @@
 import tkinter as tk
 from tkinter import Tk
+
 from controllers.controllers import FailedReq
+from models.models import BaseItem
+
+
+class ItemCard:
+    times_invoked = 0
+
+    def __shorten_text(text: str) -> str:
+        if len(text) > 30:
+            slice = text[:37]
+            return slice + '...'
+
+        return text
+
+    def create(item: BaseItem, parent, max_col):
+        title = ItemCard.__shorten_text(item.get('title'))
+        creator = ItemCard.__shorten_text(item.get('creator'))
+        year = item.get('year')
+        score = item.get('score')
+
+        container = tk.Frame(parent,
+                             width=80,
+                             height=100,
+                             bg='blue')
+        container.grid(row=ItemCard.times_invoked // max_col,
+                       column=ItemCard.times_invoked % max_col)
+        container.grid_propagate(0)
+        container.columnconfigure(0, weight=1)
+
+        title_label = tk.Label(container,
+                               text=title)
+        title_label.grid(row=0, column=0)
+
+        creator_label = tk.Label(container,
+                                 text=creator)
+        creator_label.grid(row=1, column=0)
+
+        year_label = tk.Label(container,
+                              text=year)
+        year_label.grid(row=2, column=0)
+
+        score_label = tk.Label(container,
+                               text=score)
+        score_label.grid(row=3, column=0)
 
 
 class AppUi:
@@ -49,4 +93,5 @@ class AppUi:
                            bg='green')
         canvas.grid(column=0, row=1, sticky='ew')
 
-
+        for item in collection.values():
+            ItemCard.create(item, canvas, 6)
