@@ -8,9 +8,11 @@ type BuilderReturn = Callable[[SuccessFunc], Union[Any, None]]
 def tryexceptwrap_builder(
         error_func: ErrorFunc) -> BuilderReturn:
     def wrapper(success_func):
-        try:
-            return success_func()
-        except Exception as e:
-            return error_func(e)
+        def caller(*args, **kwargs):
+            try:
+                return success_func(*args, **kwargs)
+            except Exception as e:
+                return error_func(e)
+        return caller
 
     return wrapper
