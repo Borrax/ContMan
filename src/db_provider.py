@@ -3,7 +3,8 @@ import os
 
 
 class DbProvider():
-    __db_path = '../db/db.json'
+    __db_path = os.path.join(__file__, '..', '..', 'db',
+                             'db.json')
     __json_indent = 2
 
     def __get_default_dbobj():

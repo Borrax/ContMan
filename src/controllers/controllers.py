@@ -32,7 +32,9 @@ class BaseController(ABC):
 
     @__tryexceptwrap
     def get_collection(self) -> ControllerMethodOutput:
-        collection = self.__db_provider.get_db_json()[self.__target_collection]
+        collection = (self.__db_provider.get_db_json()
+                      .get(self.__target_collection))
+
         return FulfilledReq(collection)
 
     @__tryexceptwrap
