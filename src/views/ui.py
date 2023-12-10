@@ -10,16 +10,16 @@ class ItemCard:
 
     def __shorten_text(text: str) -> str:
         if len(text) > 30:
-            slice = text[:37]
+            slice = text[:27]
             return slice + '...'
 
         return text
 
-    def create(item: BaseItem, parent, max_col):
+    def create(item, parent, max_col):
         title = ItemCard.__shorten_text(item.get('title'))
-        creator = ItemCard.__shorten_text(item.get('creator'))
         year = item.get('year')
         score = item.get('score')
+        cover_path = item.get('cover')
 
         container = tk.Frame(parent,
                              width=80,
@@ -32,19 +32,7 @@ class ItemCard:
 
         title_label = tk.Label(container,
                                text=title)
-        title_label.grid(row=0, column=0)
-
-        creator_label = tk.Label(container,
-                                 text=creator)
-        creator_label.grid(row=1, column=0)
-
-        year_label = tk.Label(container,
-                              text=year)
-        year_label.grid(row=2, column=0)
-
-        score_label = tk.Label(container,
-                               text=score)
-        score_label.grid(row=3, column=0)
+        title_label.grid(row=1, column=0)
 
 
 class AppUi:
@@ -58,6 +46,11 @@ class AppUi:
         self.__init_ui()
 
     def __init_ui(self):
+        self.__root.title('Content Manager')
+        self.__root.geometry('800x600')
+        self.__root.resizable(0, 0)
+        self.__root.columnconfigure(0, weight=1)
+
         self.__init_section('Movies', 0, self.__movies_controller)
 
     def __init_section(self, title, row, controller):

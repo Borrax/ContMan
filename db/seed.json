@@ -1,0 +1,146 @@
+{
+  "movies": {
+    "64a84b6f-def3-4442-9e47-5cce8c4304b5": {
+      "title": "The Shawshank Redemption",
+      "score": "9.3",
+      "year": "1994",
+      "dur": "2h 22m",
+      "cover": "\\assets\\pics\\49c626fa-fdfd-47bc-bde3-f3aa77c44ee1.jpg"
+    },
+    "1f80738a-d6fd-4da3-b4dc-9e3d163878eb": {
+      "title": "The Godfather",
+      "score": "9.2",
+      "year": "1972",
+      "dur": "2h 55m",
+      "cover": "\\assets\\pics\\9ab7a067-2665-41c2-8d49-69fc956356c4.jpg"
+    },
+    "ea464599-f743-46de-96b7-6487e8c80e02": {
+      "title": "The Dark Knight",
+      "score": "9.0",
+      "year": "2008",
+      "dur": "2h 32m",
+      "cover": "\\assets\\pics\\3b706cc4-7f79-4b94-8dae-b007d1361f9c.jpg"
+    },
+    "b675b698-fa10-4f32-a5fe-434865eda280": {
+      "title": "The Godfather Part II",
+      "score": "9.0",
+      "year": "1974",
+      "dur": "3h 22m",
+      "cover": "\\assets\\pics\\b3a5b094-65ca-4c86-8876-475144e177e3.jpg"
+    },
+    "a97cc25f-3e63-40dd-a19e-48789733f528": {
+      "title": "12 Angry Men",
+      "score": "9.0",
+      "year": "1957",
+      "dur": "1h 36m",
+      "cover": "\\assets\\pics\\b5a5b635-6a3f-48f5-ad1f-105b861dcd60.jpg"
+    },
+    "4878ea2a-1f73-41e6-8be6-56e3cff778b6": {
+      "title": "Schindler's List",
+      "score": "9.0",
+      "year": "1993",
+      "dur": "3h 15m",
+      "cover": "\\assets\\pics\\d1131577-8152-4435-acb9-17d7fadb9b28.jpg"
+    },
+    "c34405e0-f0fb-41b2-829f-8aba60f6cebb": {
+      "title": "The Lord of the Rings: The Return of the King",
+      "score": "9.0",
+      "year": "2003",
+      "dur": "3h 21m",
+      "cover": "\\assets\\pics\\b1d22c2e-496c-476d-bc63-5ead7718d625.jpg"
+    },
+    "c3a687dc-a047-4ceb-ab27-0dd0d3efd440": {
+      "title": "Pulp Fiction",
+      "score": "8.9",
+      "year": "1994",
+      "dur": "2h 34m",
+      "cover": "\\assets\\pics\\007d3bcc-e64f-4e79-8307-da52e3a2c8ff.jpg"
+    },
+    "f1211d53-111d-4964-aac1-4e0c924697ea": {
+      "title": "The Lord of the Rings: The Fellowship of the Ring",
+      "score": "8.8",
+      "year": "2001",
+      "dur": "2h 58m",
+      "cover": "\\assets\\pics\\6337b4a8-7925-42e0-8c79-3ceb1bf93dbd.jpg"
+    },
+    "49b2d21f-c982-4752-9aed-7e42b060b362": {
+      "title": "Il buono, il brutto, il cattivo",
+      "score": "8.8",
+      "year": "1966",
+      "dur": "2h 41m",
+      "cover": "\\assets\\pics\\2fee8ddc-967f-48c0-b807-79f60513909f.jpg"
+    },
+    "3352c7cc-de3f-4677-b3d4-fe2ce9fb8279": {
+      "title": "Forrest Gump",
+      "score": "8.8",
+      "year": "1994",
+      "dur": "2h 22m",
+      "cover": "\\assets\\pics\\276c56ad-f7b2-485f-bd3b-1570e13c6600.jpg"
+    },
+    "077ab683-511e-45c1-bd1f-657a55080a4e": {
+      "title": "Fight Club",
+      "score": "8.8",
+      "year": "1999",
+      "dur": "2h 19m",
+      "cover": "\\assets\\pics\\d8887ead-509f-4ea4-8464-35e082380fb1.jpg"
+    },
+    "6d94fe69-64bf-4649-a2ad-60e157d74a75": {
+      "title": "The Lord of the Rings: The Two Towers",
+      "score": "8.8",
+      "year": "2002",
+      "dur": "2h 59m",
+      "cover": "\\assets\\pics\\80b63473-171c-4eba-83bc-74830cab1099.jpg"
+    },
+    "cdf3cf2f-41b8-4f63-804b-73e3d24b4cf1": {
+      "title": "Inception",
+      "score": "8.8",
+      "year": "2010",
+      "dur": "2h 28m",
+      "cover": "\\assets\\pics\\a3e67760-738c-4699-844a-67c655623830.jpg"
+    },
+    "c9f91f76-6589-4e56-8f46-71195f0f565a": {
+      "title": "Star Wars: Episode V - The Empire Strikes Back",
+      "score": "8.7",
+      "year": "1980",
+      "dur": "2h 4m",
+      "cover": "\\assets\\pics\\e73a593b-54ae-42ec-b8d3-60e9ce90f89d.jpg"
+    },
+    "440236e3-505a-4532-9be7-f626a871f142": {
+      "title": "The Matrix",
+      "score": "8.7",
+      "year": "1999",
+      "dur": "2h 16m",
+      "cover": "\\assets\\pics\\c1c687e9-6ee6-4b36-932e-e39ebb078183.jpg"
+    },
+    "692f3062-6842-4825-aca8-359858387eab": {
+      "title": "Goodfellas",
+      "score": "8.7",
+      "year": "1990",
+      "dur": "2h 25m",
+      "cover": "\\assets\\pics\\e7d285f8-e68f-4cc6-b23f-5e24899c2b7d.jpg"
+    },
+    "5b86e7ce-2313-4414-8a31-ba7ff4691e9d": {
+      "title": "One Flew Over the Cuckoo's Nest",
+      "score": "8.7",
+      "year": "1975",
+      "dur": "2h 13m",
+      "cover": "\\assets\\pics\\312ed75f-7a09-4b60-a2ae-09b19780da27.jpg"
+    },
+    "49573daa-ef9e-4fe5-87c0-600250a722e5": {
+      "title": "Se7en",
+      "score": "8.6",
+      "year": "1995",
+      "dur": "2h 7m",
+      "cover": "\\assets\\pics\\16590aa8-0c5d-4753-919e-798d2231b19e.jpg"
+    },
+    "bc8a0358-9c90-4a5f-8db1-3b8f9fe0f7fd": {
+      "title": "It's a Wonderful Life",
+      "score": "8.6",
+      "year": "1946",
+      "dur": "2h 10m",
+      "cover": "\\assets\\pics\\b3ba9f42-1970-47e0-b321-8f899e97a8ce.jpg"
+    }
+  },
+  "games": {},
+  "books": {}
+}

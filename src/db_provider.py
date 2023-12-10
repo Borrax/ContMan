@@ -8,11 +8,13 @@ class DbProvider():
     __json_indent = 2
 
     def __get_default_dbobj():
-        return {
-            'games': {},
-            'movies': {},
-            'books': {}
-        }
+        seed_file = open(os.path.join(__file__, '..',
+                         '..', 'db', 'seed.json'), 'r')
+
+        seed_data = json.load(seed_file)
+        seed_file.close()
+
+        return seed_data
 
     def __create_n_seed(data):
         db_path = DbProvider.__db_path
