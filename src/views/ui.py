@@ -4,6 +4,8 @@ from views.section import Section
 
 
 class AppUi:
+    __sections = []
+
     def __init__(self, root: Tk, games_controller,
                  books_controller, movies_controller):
         self.__root = root
@@ -19,4 +21,5 @@ class AppUi:
         self.__root.resizable(0, 0)
         self.__root.columnconfigure(0, weight=1)
 
-        Section(self.__root, 'Movies', 0, self.__movies_controller)
+        self.__sections.append(
+            Section(self.__root, 'Movies', 0, self.__movies_controller))

@@ -5,6 +5,8 @@ from views.item_card import ItemCard
 
 
 class Section:
+    __item_cards = []
+
     def __init__(self, parent, title, row_number, controller):
         self.parent = parent
         self.title = title
@@ -54,5 +56,6 @@ class Section:
 
         item_counter = 0
         for (id, item) in collection.items():
-            ItemCard(id, item, canvas, 9, item_counter)
+            item_card = ItemCard(id, item, canvas, 9, item_counter)
+            self.__item_cards.append(item_card)
             item_counter += 1
