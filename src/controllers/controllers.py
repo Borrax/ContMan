@@ -1,6 +1,8 @@
+import os
 from abc import abstractmethod, ABC
 from typing import Union
 
+from config import ROOT_DIR
 from db_provider import DbProvider
 from models.models import BaseItem
 from utils.decorators import tryexceptwrap_builder
@@ -34,6 +36,10 @@ class BaseController(ABC):
     def get_collection(self) -> ControllerMethodOutput:
         collection = (self.__db_provider.get_db_json()
                       .get(self.__target_collection))
+
+        for item in collection.values():
+            image_path = item.get('cover')
+            item['cover'] = os.path.join(ROOT_DIR, image_path)
 
         return FulfilledReq(collection)
 
