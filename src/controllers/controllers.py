@@ -57,6 +57,7 @@ class BaseController(ABC):
     def delete_item(self, id) -> ControllerMethodOutput:
         db_json = self.__db_provider.get_db_json()
         del db_json[self.__target_collection][id]
+        self.__db_provider.rewrite_db(db_json)
         return FulfilledReq()
 
     @__tryexceptwrap

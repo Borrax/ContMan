@@ -76,13 +76,15 @@ class Section:
         canvas.create_window((0, 0), window=items_container,
                              anchor='nw')
 
+        funcs = self.__get_funcs_for_cards()
+
         item_counter = 0
         for (id, item) in collection.items():
             item_card = ItemCard(id, item, items_container,
-                                 9, item_counter)
+                                 9, item_counter, funcs)
             self.__item_cards.append(item_card)
             item_counter += 1
-
+        
     def __show_add_view(self, parent, row, col):
         if isinstance(self.controller, MoviesController):
             self.__movie_add_view(parent, row, col)
@@ -155,4 +157,19 @@ class Section:
             return
 
         add_view.destroy()
+        self.__create()
+
+    def __get_funcs_for_cards(self):
+        funcs = {}
+        if isinstance(self.controller, MoviesController):
+            funcs['delete_item'] = self.__delete_movie_item
+
+        return funcs
+
+    def __delete_movie_item(self, id):
+        resp = self.controller.delete_item(id)
+
+        if isinstance(resp, FailedReq):
+            return
+
         self.__create()
