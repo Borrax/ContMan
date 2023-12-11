@@ -1,6 +1,7 @@
 import tkinter as tk
 
-from controllers.controllers import FailedReq, MoviesController
+from controllers.controllers import (FailedReq, MoviesController,
+                                     GamesController, BooksController)
 from views.item_card import ItemCard
 from views.form_error import FormError
 
@@ -9,12 +10,14 @@ class Section:
     __item_cards = []
     __primary_container = None
     __collection = {}
+    __card_funcs = None
 
     def __init__(self, parent, title, row_number, controller):
         self.parent = parent
         self.title = title
         self.row_number = row_number
         self.controller = controller
+        self.__card_funcs = self.__get_funcs_for_cards()
 
         self.__create()
 
@@ -26,8 +29,7 @@ class Section:
 
         resp = self.controller.get_collection()
 
-        section_frame = tk.Frame(self.parent,
-                                 bg='red')
+        section_frame = tk.Frame(self.parent)
         section_frame.grid(row=self.row_number, column=0,
                            sticky='nsew')
         section_frame.columnconfigure(0, weight=1)
@@ -83,8 +85,7 @@ class Section:
     def __draw_item_cards(self):
         parent = self.__primary_container
 
-        canvas = tk.Canvas(parent,
-                           bg='green')
+        canvas = tk.Canvas(parent)
         canvas.grid(column=0, row=0, sticky='ew')
 
         scrollbar = tk.Scrollbar(parent, orient='vertical',
@@ -92,7 +93,8 @@ class Section:
         scrollbar.grid(row=0, column=1, sticky='ns')
         canvas['yscrollcommand'] = scrollbar.set
 
-        items_container = tk.Frame(canvas)
+        items_container = tk.Frame(canvas,
+                                   bg='lightgreen')
         items_container.grid(row=0, column=0, sticky='ew')
 
         items_container.bind(
@@ -103,16 +105,17 @@ class Section:
         canvas.create_window((0, 0), window=items_container,
                              anchor='nw')
 
-        funcs = self.__get_funcs_for_cards()
-
         item_counter = 0
         for (id, item) in self.__collection.items():
             item_card = ItemCard(id, item, items_container,
-                                 9, item_counter, funcs)
+                                 9, item_counter, self.__card_funcs)
             self.__item_cards.append(item_card)
             item_counter += 1
 
     def __show_add_view(self):
+        sv_default_vals = None
+        parent = parent = self.__primary_container
+        submit_func = None
 
         if isinstance(self.controller, MoviesController):
             sv_default_vals = {
@@ -122,10 +125,94 @@ class Section:
                 'score': ''
             }
 
-            parent = self.__primary_container
             submit_func = self.__submit_movie_item
             self.__movie_add_form(parent, 0, 0,
                                   sv_default_vals, submit_func)
+
+        elif isinstance(self.controller, BooksController):
+            sv_default_vals = {
+                'title': '',
+                'year': '',
+                'genre': '',
+                'author': ''
+            }
+
+            submit_func = self.__submit_book_item
+            self.__book_add_form(parent, 0, 0,
+                                 sv_default_vals, submit_func)
+
+    def __submit_book_item(self, title, year,
+                           genre, author, container, id=None, cover=None):
+        resp = self.controller.add_item(title, year, genre, author, cover)
+
+        if isinstance(resp, FailedReq):
+            FormError(container, resp.err_msg, 0, 0)
+            return
+
+        container.destroy()
+        self.__create()
+
+    def __book_add_form(self, parent, row, col,
+                        sv_defaults, submit_func,
+                        id=None, cover=None):
+        title_sv = tk.StringVar()
+        year_sv = tk.StringVar()
+        genre_sv = tk.StringVar()
+        author_sv = tk.StringVar()
+
+        title_sv.set(sv_defaults.get('title'))
+        year_sv.set(sv_defaults.get('year'))
+        genre_sv.set(sv_defaults.get('genre'))
+        author_sv.set(sv_defaults.get('author'))
+
+        container = tk.Frame(parent, width=300,
+                             height=240)
+        container.grid(row=row, column=col)
+        container.grid_propagate(0)
+        container.rowconfigure((1, 2, 3, 4, 5), weight=1)
+        container.columnconfigure((0, 1), weight=1)
+
+        close_btn = tk.Button(container, text='X',
+                              font='Helvetica 12 bold',
+                              command=lambda: container.destroy(),
+                              width=2)
+        close_btn.grid(row=0, column=1, sticky='e', padx=15, pady=2)
+
+        title_Label = tk.Label(container, text='Title (mandatory):',
+                               font='Helvetica 10 bold')
+        title_entry = tk.Entry(container, width=24,
+                               textvariable=title_sv)
+        title_Label.grid(row=1, column=0, pady=10)
+        title_entry.grid(row=1, column=1)
+
+        genre_label = tk.Label(container, text='Genre:',
+                               font='Helvetica 10 bold')
+        genre_entry = tk.Entry(container, width=14,
+                               textvariable=genre_sv)
+        genre_label.grid(row=2, column=0, pady=10)
+        genre_entry.grid(row=2, column=1)
+
+        year_Label = tk.Label(container, text='Year:',
+                              font='Helvetica 10 bold')
+        year_entry = tk.Entry(container, width=7,
+                              textvariable=year_sv)
+        year_Label.grid(row=3, column=0, pady=10)
+        year_entry.grid(row=3, column=1)
+
+        author_Label = tk.Label(container, text='Author:',
+                                font='Helvetica 10 bold')
+        author_entry = tk.Entry(container, width=12,
+                                textvariable=author_sv)
+        author_Label.grid(row=4, column=0, pady=10)
+        author_entry.grid(row=4, column=1)
+
+        add_btn = tk.Button(container, text='➕',
+                            width=5,
+                            command=lambda: submit_func(
+                                title_sv.get(), year_sv.get(), genre_sv.get(),
+                                author_sv.get(), container, id
+                             ))
+        add_btn.grid(row=5, column=0, columnspan=2)
 
     def __show_edit_form(self, id, item_info):
 
@@ -142,6 +229,20 @@ class Section:
             self.__movie_add_form(parent, 0, 0,
                                   sv_default_vals, submit_func, id,
                                   item_info.get('cover'))
+
+        elif isinstance(self.controller, BooksController):
+            sv_default_vals = {
+                'title': item_info.get('title'),
+                'year': item_info.get('year'),
+                'author': item_info.get('author'),
+                'genre': item_info.get('genre')
+            }
+
+            parent = self.__primary_container
+            submit_func = self.__submit_edit_book_item
+            self.__book_add_form(parent, 0, 0,
+                                 sv_default_vals, submit_func, id,
+                                 item_info.get('cover'))
 
     def __movie_add_form(self, parent, row, col,
                          sv_defaults, submit_func, id=None, cover=None):
@@ -219,13 +320,12 @@ class Section:
 
     def __get_funcs_for_cards(self):
         funcs = {}
-        if isinstance(self.controller, MoviesController):
-            funcs['delete_item'] = self.__delete_movie_item
-            funcs['show_edit_form'] = self.__show_edit_form
+        funcs['delete_item'] = self.__delete_item
+        funcs['show_edit_form'] = self.__show_edit_form
 
         return funcs
 
-    def __delete_movie_item(self, id):
+    def __delete_item(self, id):
         resp = self.controller.delete_item(id)
 
         if isinstance(resp, FailedReq):
@@ -234,12 +334,31 @@ class Section:
         self.__create()
 
     def __submit_edit_movie_item(self, title, year, score, dur,
-                                 container, id, cover):
+                                 container, id, cover=None):
         resp = self.controller.edit_item(id, {
             'title': title,
             'year': year,
             'score': score,
             'duration': dur,
+            'cover': cover
+        })
+
+        if isinstance(resp, FailedReq):
+            FormError(container, resp.err_msg, 0, 0)
+            return
+
+        container.destroy()
+        self.__create()
+
+    def __submit_edit_book_item(self, title, year,
+                                author, genre, container,
+                                id, cover=None):
+
+        resp = self.controller.edit_item(id, {
+            'title': title,
+            'year': year,
+            'author': author,
+            'genre': genre,
             'cover': cover
         })
 

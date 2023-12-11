@@ -23,3 +23,7 @@ class AppUi:
 
         self.__sections.append(
             Section(self.__root, 'Movies', 0, self.__movies_controller))
+
+        self.__sections.append(
+            Section(self.__root, 'Books', 1, self.__books_controller)
+        )
