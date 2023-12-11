@@ -21,13 +21,33 @@ class BaseItem(metaclass=ABCMeta):
 
 
 class Book(BaseItem):
-    def __init__(self, year, title):
-        super().__init__(year, title)
+    def __init__(self, title, year, author, genre, cover):
+        super().__init__(year, title, cover)
+        self.author = author
+        self.genre = genre
+
+    def get_info(self):
+        return {
+            'title': self.title,
+            'year': self.year,
+            'author': self.author,
+            'genre': self.genre,
+            'cover': self.cover
+        }
 
 
 class Game(BaseItem):
-    def __init__(self, year, title):
-        super().__init__(year, title)
+    def __init__(self, title, year, genre, cover):
+        super().__init__(year, title, cover)
+        self.genre = genre
+
+    def get_info(self):
+        return {
+            'title': self.title,
+            'year': self.year,
+            'genre': self.genre,
+            'cover': self.cover
+        }
 
 
 class Movie(BaseItem):
