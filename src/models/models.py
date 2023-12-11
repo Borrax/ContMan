@@ -13,7 +13,11 @@ class BaseItem(metaclass=ABCMeta):
         self.year = year
         self.title = title
         self.cover = cover
-        self.id = uuid.uuid4()
+        self.id = str(uuid.uuid4())
+
+    @abstractmethod
+    def get_info(self):
+        pass
 
 
 class Book(BaseItem):
@@ -30,3 +34,11 @@ class Movie(BaseItem):
     def __init__(self, year, title, cover, duration='N/A'):
         super().__init__(year, title, cover)
         self.duration = duration
+
+    def get_info(self):
+        return {
+            'title': self.title,
+            'year': self.year,
+            'duration': self.duration,
+            'cover': self.cover
+        }
