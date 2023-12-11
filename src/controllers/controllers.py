@@ -99,7 +99,4 @@ class MoviesController(BaseController):
 
         cover = self.default_movie_pic
         new_movie = Movie(year, title, cover, duration)
-        super().add_item(new_movie)
-
-
-MoviesController(DbProvider).add_item('wow', None, None, None)
+        return super().add_item(new_movie)

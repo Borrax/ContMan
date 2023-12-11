@@ -31,7 +31,7 @@ class Game(BaseItem):
 
 
 class Movie(BaseItem):
-    def __init__(self, year, title, cover, duration='N/A'):
+    def __init__(self, year, title, cover, duration):
         super().__init__(year, title, cover)
         self.duration = duration
 
