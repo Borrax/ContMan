@@ -61,13 +61,13 @@ class BaseController(ABC):
         return FulfilledReq()
 
     @__tryexceptwrap
-    def edit_item(self, new_item) -> ControllerMethodOutput:
-        id = new_item.id
-        db_json = self.db_provider.get_db_json()
+    def edit_item(self, id, new_item_info) -> ControllerMethodOutput:
+        db_json = self.__db_provider.get_db_json()
         if db_json[self.__target_collection].get(id) is None:
             return FailedReq('Not existing id of the item')
 
-        db_json[self.__target_collection][id] = new_item
+        db_json[self.__target_collection][id] = new_item_info
+        self.__db_provider.rewrite_db(db_json)
         return FulfilledReq()
 
 
@@ -85,7 +85,7 @@ class MoviesController(BaseController):
     def __init__(self, db_provider):
         super().__init__(db_provider, 'movies')
 
-    def add_item(self, title, year, score, duration):
+    def add_item(self, title, year, score, duration, cover):
         if title is None or title == '':
             return FailedReq('Missing title')
 
@@ -98,6 +98,35 @@ class MoviesController(BaseController):
         if duration is None or duration == '':
             duration = 'N/A'
 
-        cover = self.default_movie_pic
+        if cover is None:
+            cover = self.default_movie_pic
+
         new_movie = Movie(year, title, cover, duration)
         return super().add_item(new_movie)
+
+    def edit_item(self, id, item_info):
+        if id is None:
+            return FailedReq('Missing item Id')
+
+        title = item_info.get('title')
+        year = item_info.get('year')
+        score = item_info.get('score')
+        duration = item_info.get('duration')
+        cover = item_info.get('cover')
+
+        if title is None or title == '':
+            return FailedReq('Missing title')
+
+        if duration is None or duration == '':
+            item_info['duration'] = 'N/A'
+
+        if score is None or score == '':
+            item_info['score'] = 'N/A'
+
+        if year is None or year == '':
+            item_info['year'] = 'N/A'
+
+        if cover is None:
+            item_info['cover'] = self.default_movie_pic
+
+        return super().edit_item(id, item_info)

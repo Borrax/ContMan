@@ -54,7 +54,11 @@ class ItemCard:
         del_btn.grid(row=0, column=1)
 
         edit_btn = tk.Button(btn_container,
-                             text='✐')
+                             text='✐',
+                             command=lambda: self.parent_funcs[
+                                'show_edit_form'](
+                                self.id, self.item
+                             ))
         edit_btn.grid(row=0, column=0)
 
         title_label = tk.Label(container, text=title,

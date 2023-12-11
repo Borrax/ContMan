@@ -2,10 +2,12 @@ import tkinter as tk
 
 from controllers.controllers import FailedReq, MoviesController
 from views.item_card import ItemCard
+from views.form_error import FormError
 
 
 class Section:
     __item_cards = []
+    __primary_container = None
 
     def __init__(self, parent, title, row_number, controller):
         self.parent = parent
@@ -29,9 +31,8 @@ class Section:
         title_label.grid(row=0, column=0)
 
         add_btn = tk.Button(section_frame, text='➕ Add')
-        add_btn.configure(command=lambda: self.__show_add_view(
-            section_frame, 1, 0
-        ))
+        add_btn.configure(command=self.__show_add_view)
+
         add_btn.grid(row=0, column=1)
 
         if isinstance(resp, FailedReq):
@@ -49,6 +50,7 @@ class Section:
         empty_frame.grid(row=1, column=0, sticky='ew',
                          columnspan=2)
         empty_frame.columnconfigure(0, weight=1)
+        self.__primary_container = empty_frame
 
         collection = resp.payload
         if len(collection) == 0:
@@ -84,16 +86,49 @@ class Section:
                                  9, item_counter, funcs)
             self.__item_cards.append(item_card)
             item_counter += 1
-        
-    def __show_add_view(self, parent, row, col):
-        if isinstance(self.controller, MoviesController):
-            self.__movie_add_view(parent, row, col)
 
-    def __movie_add_view(self, parent, row, col):
+    def __show_add_view(self):
+
+        if isinstance(self.controller, MoviesController):
+            sv_default_vals = {
+                'title': '',
+                'year': '',
+                'dur': '',
+                'score': ''
+            }
+
+            parent = self.__primary_container
+            submit_func = self.__submit_movie_item
+            self.__movie_add_form(parent, 0, 0,
+                                  sv_default_vals, submit_func)
+
+    def __show_edit_form(self, id, item_info):
+
+        if isinstance(self.controller, MoviesController):
+            sv_default_vals = {
+                'title': item_info.get('title'),
+                'year': item_info.get('year'),
+                'dur': item_info.get('duration'),
+                'score': item_info.get('score')
+            }
+
+            parent = self.__primary_container
+            submit_func = self.__submit_edit_movie_item
+            self.__movie_add_form(parent, 0, 0,
+                                  sv_default_vals, submit_func, id,
+                                  item_info.get('cover'))
+
+    def __movie_add_form(self, parent, row, col,
+                         sv_defaults, submit_func, id=None, cover=None):
         title_sv = tk.StringVar()
         year_sv = tk.StringVar()
         dur_sv = tk.StringVar()
         score_sv = tk.StringVar()
+
+        title_sv.set(sv_defaults.get('title'))
+        year_sv.set(sv_defaults.get('year'))
+        dur_sv.set(sv_defaults.get('dur'))
+        score_sv.set(sv_defaults.get('score'))
 
         container = tk.Frame(parent, width=300,
                              height=240)
@@ -138,22 +173,20 @@ class Section:
 
         add_btn = tk.Button(container, text='➕',
                             width=5,
-                            command=lambda: self.__submit_movie_item(
+                            command=lambda: submit_func(
                                 title_sv.get(), year_sv.get(), score_sv.get(),
-                                dur_sv.get(), container
+                                dur_sv.get(), container, id, cover
                              ))
         add_btn.grid(row=5, column=0, columnspan=2)
 
     def __submit_movie_item(self, title, year, score, duration,
-                            add_view):
+                            add_view, id=None, cover=None):
         resp = self.controller.add_item(title=title, year=year,
-                                        score=score, duration=duration)
+                                        score=score, duration=duration,
+                                        cover=cover)
 
         if isinstance(resp, FailedReq):
-            error_label = tk.Label(add_view,
-                                   text=f'❌ {resp.err_msg}')
-
-            error_label.grid(row=0, column=0)
+            FormError(add_view, resp.err_msg, 0, 0)
             return
 
         add_view.destroy()
@@ -163,6 +196,7 @@ class Section:
         funcs = {}
         if isinstance(self.controller, MoviesController):
             funcs['delete_item'] = self.__delete_movie_item
+            funcs['show_edit_form'] = self.__show_edit_form
 
         return funcs
 
@@ -172,4 +206,21 @@ class Section:
         if isinstance(resp, FailedReq):
             return
 
+        self.__create()
+
+    def __submit_edit_movie_item(self, title, year, score, dur,
+                                 container, id, cover):
+        resp = self.controller.edit_item(id, {
+            'title': title,
+            'year': year,
+            'score': score,
+            'duration': dur,
+            'cover': cover
+        })
+
+        if isinstance(resp, FailedReq):
+            FormError(container, resp.err_msg, 0, 0)
+            return
+
+        container.destroy()
         self.__create()
