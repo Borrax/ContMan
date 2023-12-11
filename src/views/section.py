@@ -8,6 +8,7 @@ from views.form_error import FormError
 class Section:
     __item_cards = []
     __primary_container = None
+    __collection = {}
 
     def __init__(self, parent, title, row_number, controller):
         self.parent = parent
@@ -19,6 +20,10 @@ class Section:
 
     def __create(self):
         self.__item_cards = []
+        search_sv = tk.StringVar()
+        search_sv.trace_add('write',
+                            lambda *args: self.__search_items(search_sv.get()))
+
         resp = self.controller.get_collection()
 
         section_frame = tk.Frame(self.parent,
@@ -28,12 +33,27 @@ class Section:
         section_frame.columnconfigure(0, weight=1)
 
         title_label = tk.Label(section_frame, text=self.title)
-        title_label.grid(row=0, column=0)
+        title_label.grid(row=0, column=0, columnspan=3)
+
+        search_container = tk.Frame(section_frame,
+                                    height=15,
+                                    width=120)
+        search_container.grid(row=0, column=1, padx=10)
+        search_container.rowconfigure(0, weight=1)
+        search_container.grid_propagate(0)
+
+        search_label = tk.Label(search_container,
+                                text='Search:')
+        search_label.grid(row=0, column=0, sticky='ns')
+
+        search_entry = tk.Entry(search_container,
+                                textvariable=search_sv,
+                                width=12)
+        search_entry.grid(row=0, column=1, sticky='ns')
 
         add_btn = tk.Button(section_frame, text='➕ Add')
         add_btn.configure(command=self.__show_add_view)
-
-        add_btn.grid(row=0, column=1)
+        add_btn.grid(row=0, column=2, pady=2)
 
         if isinstance(resp, FailedReq):
             error_text = f'Error occured retrieving {self.title}\n' \
@@ -48,21 +68,26 @@ class Section:
         empty_frame = tk.Frame(section_frame,
                                height=300)
         empty_frame.grid(row=1, column=0, sticky='ew',
-                         columnspan=2)
+                         columnspan=3)
         empty_frame.columnconfigure(0, weight=1)
         self.__primary_container = empty_frame
 
-        collection = resp.payload
-        if len(collection) == 0:
+        self.__collection = resp.payload
+        if len(self.__collection) == 0:
             msg_label = tk.Label(empty_frame, text='No Items Currently')
             msg_label.grid(column=0, row=0)
             return
 
-        canvas = tk.Canvas(empty_frame,
+        self.__draw_item_cards()
+
+    def __draw_item_cards(self):
+        parent = self.__primary_container
+
+        canvas = tk.Canvas(parent,
                            bg='green')
         canvas.grid(column=0, row=0, sticky='ew')
 
-        scrollbar = tk.Scrollbar(empty_frame, orient='vertical',
+        scrollbar = tk.Scrollbar(parent, orient='vertical',
                                  command=canvas.yview)
         scrollbar.grid(row=0, column=1, sticky='ns')
         canvas['yscrollcommand'] = scrollbar.set
@@ -81,7 +106,7 @@ class Section:
         funcs = self.__get_funcs_for_cards()
 
         item_counter = 0
-        for (id, item) in collection.items():
+        for (id, item) in self.__collection.items():
             item_card = ItemCard(id, item, items_container,
                                  9, item_counter, funcs)
             self.__item_cards.append(item_card)
@@ -224,3 +249,13 @@ class Section:
 
         container.destroy()
         self.__create()
+
+    def __search_items(self, substr):
+        resp = self.controller.search_items(substr)
+
+        if isinstance(resp, FailedReq):
+            print('Failed', resp.err_msg)
+            return
+
+        self.__collection = resp.payload
+        self.__draw_item_cards()
