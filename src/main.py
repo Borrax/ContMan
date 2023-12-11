@@ -1,4 +1,3 @@
-import tkinter as tk
 from tkinter import Tk
 
 from db_provider import DbProvider
@@ -7,10 +6,6 @@ from controllers.controllers import (
 from views.ui import AppUi
 
 root = Tk()
-root.title('Content Manager')
-root.geometry('800x600')
-root.resizable(0, 0)
-root.columnconfigure(0, weight=1)
 
 games_controller = GamesController(DbProvider)
 books_controller = BooksController(DbProvider)
