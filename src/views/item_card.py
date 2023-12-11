@@ -13,16 +13,14 @@ class ItemCard:
         self.__create()
 
     def __shorten_text(self, text: str) -> str:
-        if len(text) > 30:
-            slice = text[:27]
+        if len(text) > 13:
+            slice = text[:10]
             return slice + '...'
 
         return text
 
     def __create(self):
         title = self.__shorten_text(self.item.get('title'))
-        year = self.item.get('year')
-        score = self.item.get('score')
         cover_path = self.item.get('cover')
 
         container = tk.Frame(self.parent,
@@ -36,9 +34,11 @@ class ItemCard:
         container.columnconfigure(0, weight=1)
 
         self.image = tk.PhotoImage(file=cover_path)
-        image_label = tk.Label(container, image=self.image)
-        image_label.grid(row=0, column=0)
+        image_label = tk.Label(container, image=self.image,
+                               height=190)
+        image_label.grid(row=0, column=0, sticky='nesw')
 
-        title_label = tk.Label(container,
-                               text=title)
-        title_label.grid(row=1, column=0)
+        title_label = tk.Label(container, text=title,
+                               font='Helvetica 9 bold italic')
+        title_label.grid(row=0, column=0, sticky='n',
+                         pady=80)
